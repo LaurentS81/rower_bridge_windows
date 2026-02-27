@@ -1,0 +1,32 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Récupération du projet
+      uses: actions/checkout@v4
+
+    - name: Installer Python 3.9.1
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.9.1
+
+    - name: Installer les dépendances
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Créer le fichier EXE
+      run: |
+        pyinstaller --onefile rower_bridge.py
+
+    - name: Sauvegarder le EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: rower_bridge_windows
+        path: dist/rower_bridge.exe
