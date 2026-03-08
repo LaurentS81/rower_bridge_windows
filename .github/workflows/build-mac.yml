@@ -25,7 +25,7 @@ jobs:
 
     - name: Build Intel version
       run: |
-        pyinstaller --onefile rower_bridge_FTMS.py --distpath dist_intel
+        pyinstaller --onefile rower_bridge.py --distpath dist_intel
 
     - name: Nettoyage
       run: |
@@ -33,7 +33,7 @@ jobs:
 
     - name: Build Apple Silicon version
       run: |
-        arch -arm64 pyinstaller --onefile rower_bridge_FTMS.py --distpath dist_arm
+        arch -arm64 pyinstaller --onefile rower_bridge.py --distpath dist_arm
 
     - name: Créer le binaire universel
       run: |
