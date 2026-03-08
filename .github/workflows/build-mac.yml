@@ -1,4 +1,4 @@
-name: Build MacOS Binary
+name: Build MacOS Universal Binary
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     - name: Récupération du projet
       uses: actions/checkout@v4
 
-    - name: Installer Python 3.9.1
+    - name: Installer Python
       uses: actions/setup-python@v5
       with:
         python-version: 3.9.1
@@ -23,12 +23,32 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Créer le binaire Mac
+    - name: Build Intel version
       run: |
-        pyinstaller --onefile rower_bridge_FTMS.py
+        pyinstaller --onefile rower_bridge_FTMS.py --distpath dist_intel
+
+    - name: Nettoyage
+      run: |
+        rm -rf build
+
+    - name: Build Apple Silicon version
+      run: |
+        arch -arm64 pyinstaller --onefile rower_bridge_FTMS.py --distpath dist_arm
+
+    - name: Créer le binaire universel
+      run: |
+        mkdir dist_universal
+        lipo -create \
+        dist_intel/rower_bridge_FTMS \
+        dist_arm/rower_bridge_FTMS \
+        -output dist_universal/rower_bridge_FTMS
+
+    - name: Vérifier architecture
+      run: |
+        file dist_universal/rower_bridge_FTMS
 
     - name: Sauvegarder le binaire
       uses: actions/upload-artifact@v4
       with:
-        name: rower_bridge_macos
-        path: dist/rower_bridge_FTMS
+        name: rower_bridge_macos_universal
+        path: dist_universal/rower_bridge_FTMS
