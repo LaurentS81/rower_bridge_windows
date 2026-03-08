@@ -39,16 +39,16 @@ jobs:
       run: |
         mkdir dist_universal
         lipo -create \
-        dist_intel/rower_bridge_FTMS \
-        dist_arm/rower_bridge_FTMS \
-        -output dist_universal/rower_bridge_FTMS
+        dist_intel/rower_bridge \
+        dist_arm/rower_bridge \
+        -output dist_universal/rower_bridge
 
     - name: Vérifier architecture
       run: |
-        file dist_universal/rower_bridge_FTMS
+        file dist_universal/rower_bridge
 
     - name: Sauvegarder le binaire
       uses: actions/upload-artifact@v4
       with:
         name: rower_bridge_macos_universal
-        path: dist_universal/rower_bridge_FTMS
+        path: dist_universal/rower_bridge
